@@ -20,3 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/questions', 'QuestionController@index');
 
 Route::get('/questions/{question}', 'QuestionController@show');
+
+Route::post('/questions/{question}/answers', 'AnswerController@store');
