@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Questions;
 
 use Carbon\Carbon;
+use Tests\TestCase;
+use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 class ViewQuestionsTest extends TestCase
 {
@@ -53,5 +54,21 @@ class ViewQuestionsTest extends TestCase
         $question = factory(Question::class)->create(['published_at' => null]);
 
         $this->withExceptionHandling()->get('/questions/' . $question->id)->assertStatus(404);
+    }
+
+    /**
+     * @test
+     */
+    public function can_see_answers_when_view_a_published_question()
+    {
+        $question = factory(Question::class)->state('published')->create();
+        create(Answer::class, ['question_id' => $question->id], 40);
+
+        $response = $this->get('/questions/' . $question->id);
+
+        $result = $response->data('answers')->toArray();
+
+        $this->assertCount(20, $result['data']);
+        $this->assertEquals(40, $result['total']);
     }
 }
