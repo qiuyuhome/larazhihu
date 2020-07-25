@@ -19,7 +19,7 @@ class PostAnswersTest extends TestCase
     {
         // 1. 假设存在某个问题
         $question = factory(Question::class)->state('published')->create();
-        $this->actingAs($user = factory(User::class)->create());
+        $this->signIn($user = create(User::class));
 
         // 2. 触发某个路由
         $response = $this->post("/questions/{$question->id}/answers", [
@@ -40,7 +40,7 @@ class PostAnswersTest extends TestCase
     public function can_not_post_an_answer_to_a_unpublished_question()
     {
         $question = factory(Question::class)->state('unpublished')->create();
-        $this->actingAs($user = factory(User::class)->create());
+        $this->signIn($user = create(User::class));
 
         $response = $this->withExceptionHandling()
             ->post('/questions/' . $question->id . '/answers', [
@@ -62,7 +62,7 @@ class PostAnswersTest extends TestCase
         $this->withExceptionHandling();
 
         $question = factory(Question::class)->state('published')->create();
-        $this->actingAs($user = factory(User::class)->create());
+        $this->signIn($user = create(User::class));
 
         $response = $this->post("/questions/{$question->id}/answers", [
             'user_id' => $user->id,
