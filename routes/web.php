@@ -26,3 +26,5 @@ Route::get('/questions/{question}', 'QuestionController@show');
 Route::post('/questions/{question}/answers', 'AnswerController@store');
 
 Route::post('/answers/{answer}/best', 'BestAnswersController@store')->name('best-answers.store');
+
+Route::delete('/answers/{answer}', 'AnswerController@destroy')->name('answers.destroy');

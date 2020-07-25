@@ -1,13 +1,12 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Answers;
 
 use App\User;
+use Tests\TestCase;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 
 class BestAnswerTest extends TestCase
 {
