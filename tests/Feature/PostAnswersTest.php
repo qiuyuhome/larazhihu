@@ -15,10 +15,10 @@ class PostAnswersTest extends TestCase
     /**
      * @test
      */
-    public function user_can_post_a_answer_to_a_question()
+    public function user_can_post_an_answer_to_a_published_question()
     {
         // 1. 假设存在某个问题
-        $question = factory(Question::class)->create();
+        $question = factory(Question::class)->state('published')->create();
         $user = factory(User::class)->create();
 
         // 2. 触发某个路由
@@ -33,5 +33,25 @@ class PostAnswersTest extends TestCase
         $answer = $question->answers()->where('user_id', $user->id)->first();
         $this->assertNotNull($answer);
         $this->assertEquals(1, $question->answers()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function can_not_post_an_answer_to_a_unpublished_question()
+    {
+        $question = factory(Question::class)->state('unpublished')->create();
+        $user = factory(User::class)->create();
+
+        $response = $this->withExceptionHandling()
+            ->post('/questions/' . $question->id . '/answers', [
+                'user_id' => $user->id,
+                'content' => 'This is a answer.',
+            ]);
+
+        $response->assertStatus(404);
+
+        $this->assertDatabaseMissing('answers', ['question_id' => $question->id]);
+        $this->assertEquals(0, $question->answers()->count());
     }
 }
